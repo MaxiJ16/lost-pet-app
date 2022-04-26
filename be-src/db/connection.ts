@@ -1,4 +1,8 @@
 import { Sequelize } from "sequelize";
+import "dotenv/config";
+console.log(process.env.DATABASE_USERNAME);
+console.log(process.env.DATABASE_PASSWORD);
+console.log(process.env.DATABASE_HOST);
 
 const sequelize = new Sequelize({
   dialect: "postgres",
@@ -17,6 +21,6 @@ const sequelize = new Sequelize({
   },
 });
 
-sequelize.authenticate()
+sequelize.authenticate();
 
 export { sequelize };

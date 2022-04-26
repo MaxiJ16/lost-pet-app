@@ -1,6 +1,6 @@
 const sgMail = require("@sendgrid/mail");
 
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+sgMail.setApiKey(process.env.SENDGRID_APIK);
 
 export async function sendEmailReport(reportData) {
   const { reporter, phone_number, message, petName, userEmail, userName } =
