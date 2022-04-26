@@ -1,0 +1,22 @@
+.auth {
+  padding: 44px 20px;
+  height: 80vh;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.auth-container {
+  display: grid;
+  gap: 40px;
+}
+
+.auth-form {
+  height: 147px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.auth-title {
+  text-align: center;
+}

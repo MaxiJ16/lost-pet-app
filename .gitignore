@@ -1,0 +1,5 @@
+be-dist
+fe-dist
+node_modules
+.parcel-cache
+.env

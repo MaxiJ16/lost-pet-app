@@ -1,0 +1,36 @@
+.page-home {
+  padding: 33px 20px;
+  height: 80vh;
+  max-width: 769px;
+  margin: 0 auto;
+}
+
+.title {
+  text-align: center;
+}
+
+.container {
+  display: grid;
+  gap: 25px;
+}
+
+.container-form {
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+@media (min-width: 769px) {
+  .container-form {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.form-button {
+  margin-top: 22px;
+}
+
+.notPet {
+  display: none;
+}

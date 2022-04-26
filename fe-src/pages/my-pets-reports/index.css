@@ -1,0 +1,32 @@
+.my-pets-page {
+  padding: 44px 20px;
+  height: auto;
+  margin: 0 auto;
+}
+
+@media (min-width: 769px) {
+  .my-pets-page {
+    height: 100%;
+    max-width: 769px;
+  }
+}
+
+.my-pets-container {
+  display: grid;
+  gap: 40px;
+}
+
+.my-pets-title {
+  text-align: center;
+}
+
+.cards-container {
+  display: grid;
+  gap: 20px;
+}
+
+@media (min-width: 769px) {
+  .cards-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

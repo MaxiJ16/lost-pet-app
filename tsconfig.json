@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "ESnext",
+    // commonJs es la forma que tiene node de hacer require en vez de import
+    "module":"CommonJS",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "outDir": "be-dist"
+  },
+  // esto es una forma de decirle todos los archivos que tiene que transpilar (pasar a js)
+  // les indicamos que tiene que transpilar todas las carpetas, todos los archivos que terminen en .ts
+  "includes": ["./be-src/**/*.ts"],
+  "exclude": ["./fe-src/**/*.ts"]
+}

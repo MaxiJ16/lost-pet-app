@@ -1,0 +1,36 @@
+{
+  "name": "desafio-final-mod-7",
+  "version": "1.0.0",
+  "license": "MIT",
+  "scripts": {
+    "sync": "ts-node ./be-src/db/sync.ts",
+    "dev:be": "nodemon --watch ./be-src/index.ts --exec ts-node ./be-src/index.ts",
+    "build:be": "tsc",
+    "dev:fe": "parcel serve ./fe-src/index.html --dist-dir ./fe-dist",
+    "build:fe": "parcel build ./fe-src/index.html --dist-dir ./fe-dist",
+    "build": "npm run build:be && npm run build:fe",
+    "start": "node ./be-dist/index.js"
+  },
+  "dependencies": {
+    "@sendgrid/mail": "^7.6.2",
+    "@vaadin/router": "^1.7.4",
+    "algoliasearch": "^4.13.0",
+    "cloudinary": "^1.28.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
+    "dropzone": "^6.0.0-beta.2",
+    "express": "^4.17.3",
+    "jsonwebtoken": "^8.5.1",
+    "mapbox": "^1.0.0-beta10",
+    "mapbox-gl": "^2.7.0",
+    "nanoid": "^3.3.2",
+    "parcel": "^2.0.0-rc.0",
+    "pg": "^8.7.3",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.16.2",
+    "typescript": "^4.6.3"
+  },
+  "devDependencies": {
+    "@parcel/transformer-image": "2.0.0-rc.0"
+  }
+}

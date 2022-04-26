@@ -1,0 +1,50 @@
+.report {
+  padding: 44px 20px;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 10px;
+  margin-bottom: 200px;
+}
+
+.report-form {
+  display: grid;
+  gap: 15px;
+}
+
+.button-cancel {
+  background-color: #CDCDCD;
+}
+
+.dropzone-button {
+  background-color:  #97EA9F;
+  text-align: center;
+  min-height: 50px;
+  height: auto;
+  padding: 10px;
+  display: grid;
+  align-items: center;
+  gap: 10px;
+}
+
+.button-search {
+  margin-bottom: 10px;
+}
+
+.dz-success-mark, .dz-error-message, .dz-progress, .dz-details, .dz-error-mark, .dz-default, .mapboxgl-ctrl-attrib-inner,  .mapboxgl-ctrl-attrib-button {
+  display: none;
+}
+
+.message, .error {
+  color: white;
+  margin-top: 30px;
+  padding: 5px;
+  border-radius: 4px;
+  font-size: 20px;
+  text-align: center;
+}
+
+.error {
+  background-color:rgb(31, 28, 28) ;
+  color: #ff6868;
+}
+
