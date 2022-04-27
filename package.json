@@ -24,6 +24,7 @@
     "mapbox": "^1.0.0-beta10",
     "mapbox-gl": "^2.7.0",
     "nanoid": "^3.3.2",
+    "nodemon": "^2.0.15",
     "parcel": "^2.0.0-rc.0",
     "pg": "^8.7.3",
     "pg-hstore": "^2.3.4",
