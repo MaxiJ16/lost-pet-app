@@ -1,5 +1,4 @@
-//"https://piedra-papel-tijera-mod6.herokuapp.com"
-const API_BASE_URL = "http://localhost:3000";
+const API_BASE_URL = process.env.API_BASE_URL || "http://localhost:3000";
 
 const state = {
   data: {
@@ -166,7 +165,7 @@ const state = {
     return data;
   },
   // Cuando el usuario olvida la contraseña, para cambiarla
-  async newPassword(authData: { email: string; password }){
+  async newPassword(authData: { email: string; password }) {
     const resNewPassword = await fetch(API_BASE_URL + "/auth/forgot", {
       method: "POST",
       headers: {
@@ -197,7 +196,7 @@ const state = {
     return data;
   },
   // Crear un reporte
-  async createReport(reportData){
+  async createReport(reportData) {
     const resReport = await fetch(API_BASE_URL + `/report`, {
       method: "POST",
       headers: {
