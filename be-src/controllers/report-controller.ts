@@ -1,12 +1,7 @@
 import { Pet, Report, User } from "../models";
 import { sendEmailReport } from "../lib/sendgrid";
 
-export async function createReport(reportData: {
-  reporter: string;
-  phone_number: string;
-  message: Text;
-  petId: string;
-}) {
+export async function createReport(reportData: { reporter: string; phone_number: string; message: Text; petId: string }) {
   const { reporter, phone_number, message, petId } = reportData;
 
   if (!reporter && !phone_number && !message && !petId) {
@@ -14,19 +9,16 @@ export async function createReport(reportData: {
   }
 
   // Creamos el reporte
-  const createReporter = await Report.create({
-    reporter,
-    phone_number,
-    message,
-    petId: petId,
-  });
+  const createReporter = await Report.create({ reporter, phone_number, message, petId: petId });
 
-  // Buscamos la mascota para poder extraer el user que la reportó
+  // Buscamos la mascota para poder extraer el id del user que la perdió
   const findPet = await Pet.findByPk(petId);
 
+  // Buscamos el usuario y obtenemos su data con el id
   const userId = findPet["userId"];
   const userData = await User.findByPk(userId);
 
+  // Formamos el objeto para enviar el reporte en sendgrid
   const objReportData = {
     reporter,
     phone_number,

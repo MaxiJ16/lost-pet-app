@@ -1,3 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap');
+
+:root {
+  --color-button1: #FF9DF5;
+  --color-button2: #97EA9F;
+  --color-button3: #CDCDCD;
+  --color-header: #FF6868;
+  --color-menuBurguer: #8AF1FF;
+  --color-link: #40AFFF;
+  --color-link2: #008080;
+  --color-link3: #800080;
+  --color-link4: #FF3A3A;
+  --color-link-hover: #C6558B;
+  --color-white: #fdf5e6;
+  --color-black: #000000;
+  --color-error: #1f1c1c;
+  ;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -5,35 +24,39 @@
 body {
   margin: 0;
   padding: 0;
+  font-family: 'Poppins', sans-serif;
 }
 
-h2 {
-  margin: 0;
+/* BUTTONS, INPUTS, TEXTAREAS */
+
+.button, .input, .textarea {
+  width: 100%;
+  border-radius: 4px;
+}
+
+.button, .input {
+  height: 50px;
+}
+
+.input, .textarea {
+  box-sizing: border-box;
+  border: 2px solid var(--color-black);
+  margin-bottom: 15px;
 }
 
 .button {
-  width: 100%;
-  height: 50px;
-  border-radius: 4px;
+  background-color: var(--color-button1);
   border: none;
-  background-color: #FF9DF5;
+  font-size: 16px;
+  font-weight: 700;
 }
 
 .input {
-  box-sizing: border-box;
-  width: 100%;
-  height: 50px;
   text-align: center;
   padding: 8px 0;
-  border: 2px solid #000000;
-  border-radius: 4px;
-  margin-bottom: 10px;
 }
 
 .textarea {
-  width: 100%;
   min-height: 127px;
-  border: 2px solid #000000;
-  border-radius: 4px;
-  margin-bottom: 23px;
 }
+

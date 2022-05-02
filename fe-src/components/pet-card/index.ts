@@ -1,7 +1,7 @@
 import { Router } from "@vaadin/router";
 import { state } from "../../state";
 
-// const bobbyPicture = require("../../assets/bobby.png");
+// IMAGENES DEL LÁPIZ Y EL MENÚ
 const lapizPicture = require("../../assets/lapiz.png");
 const menuX = require("../../assets/xBlack.png");
 
@@ -11,7 +11,7 @@ export class Card extends HTMLElement {
     super();
     this.shadow = this.attachShadow({ mode: "open" });
   }
-  // Recibimos la data de la mascota
+  // RECIBIMOS LA DATA DE LA MASCOTA Y LA DEVOLVEMOS EN UN OBJETO PARA PODER SETEARLO
   receivePetData() {
     const imagePet = this.getAttribute("img");
     const namePet = this.getAttribute("name");
@@ -40,8 +40,9 @@ export class Card extends HTMLElement {
     const reportInfo = this.shadow.querySelector(".content-link") as any;
     const editPetImg = this.shadow.querySelector(".picture") as any;
 
-    // Si estamos en mis mascotas reportadas le agregamos la foto del lapiz para editar
+    // SI ESTAMOS EN LA PÁGINA DE MIS MASCOTAS REPORTADAS
     if (location.pathname == "/my-pets") {
+      // AGREGAMOS EL LAPIZ DE EDITAR
       editPetImg.src = lapizPicture;
       // Cuando le hagan click al lapiz para editar tomamos los atributos para obtener los datos de esa mascota y los seteamos
       editPetImg.addEventListener("click", () => {
@@ -50,16 +51,20 @@ export class Card extends HTMLElement {
       });
     }
 
+    // SI NO ESTAMOS EN LA PÁGINA DE MIS MASCOTAS REPORTADAS
     if (location.pathname !== "/my-pets") {
       editPetImg.src = "";
       reportInfo.textContent = "REPORTAR INFORMACIÓN";
-      // Formulario para reportar infomación
-      const formReportEl = this.shadow.querySelector(
-        ".petCard-container-reportInfo"
-      ) as any;
+      
+      // BUSCAMOS PARA MOSTRAR EL MENSAJE DE EXITO O ERROR Y EL PRELOADER
+      const msgEl = this.shadow.querySelector("msg-comp") as any;
+      const preloaderEl = this.shadow.querySelector("pre-loader") as any;
 
+      // FORMULARIO PARA REPORTAR INFORMACIÓN
+      const formReportEl = this.shadow.querySelector(".petCard-container-reportInfo") as any;
       // Si le hacen click a reportar información
       reportInfo.addEventListener("click", () => {
+        preloaderEl.style.display = "none";
         state.setPetData(this.receivePetData());
         // Mostramos el formulario
         formReportEl.style.display = "initial";
@@ -67,17 +72,16 @@ export class Card extends HTMLElement {
 
       // X para cerrar la venta de reporte
       const buttonX = this.shadow.querySelector(".menuX") as any;
-
       buttonX.addEventListener("click", () => {
         formReportEl.style.display = "none";
       });
 
-      // Buscamos el div en el que mostramos el mensaje
-      const message = this.shadow.querySelector(".message") as any;
 
       // Escuchamos el evento submit de reporte para tomar los datos y crear el reporte
       formReportEl.addEventListener("submit", async (e) => {
         e.preventDefault();
+        preloaderEl.style.display = "initial";
+
         const cs = state.getState();
         const { petId } = cs.user.petData;
 
@@ -88,17 +92,23 @@ export class Card extends HTMLElement {
           petId: petId,
         });
 
+        // SI SE CREA EL REPORTE
         if (reportRes.res) {
-          message.style.backgroundColor = "#ff6868";
-          message.textContent = reportRes.mensaje;
+          preloaderEl.style.display = "none";
+          // msgEl.className = ;
+          msgEl.className = "message-exito"
+          msgEl.textContent = reportRes.mensaje;
 
           setTimeout(() => {
             formReportEl.style.display = "none";
           }, 2000);
         }
 
+        // SI NO SE CREA EL REPORTE
         if (reportRes.error) {
-          message.textContent = reportRes.error;
+          preloaderEl.style.display = "none";
+          msgEl.className = "message-error";
+          msgEl.textContent = reportRes.error;
         }
       });
     }
@@ -117,7 +127,7 @@ export class Card extends HTMLElement {
         <div class="content-text">
           <my-text tag="h3" class="text-pet-name">${namePet}</my-text>
           <my-text class="text-pet-location">${locationPet}</my-text>
-          <my-text class="text-pet-state">Estado: ${estado}</my-text>
+          <my-text class="text-pet-state">${estado}</my-text>
         </div>
         <a class="content-link" href=""><img class="picture" src=""></img></a>
       </div>
@@ -147,11 +157,20 @@ export class Card extends HTMLElement {
             <textarea class="textarea reportWhere-textarea" type="text" id="where" name="where"/ required></textarea>
           </label>
 
-          <button type="submit" class="button reportInfo-button">Enviar</button>
-          <div class="message"></div>
+          <button type="submit" class="button reportInfo-button"><my-text tag="h5">Enviar</my-text></button>
+          <msg-comp></msg-comp>
+          <pre-loader></pre-loader>
         </form>
       </div>
     `;
+
+    const estadoEl = divEl.querySelector(".text-pet-state") as any;
+
+    if (estado == "PERDIDO") {
+      estadoEl.style.color = "var(--color-link4)";
+    } else {
+      estadoEl.style.color = "var(--color-link2)";
+    }
 
     const style = document.createElement("style");
     style.innerHTML = `
@@ -268,13 +287,26 @@ export class Card extends HTMLElement {
         border: none;
       }
 
-      .message {
-        text-align: center;
-        margin-top: 5px;
+      .message-exito {
+        width: 100%;
+        margin-top: 20px;
         padding: 2px;
         border-radius: 4px;
         font-size: 20px;
-        color: white;
+        text-align: center;
+        background-color: var(--color-header);
+        color: var(--color-white)
+      }
+
+      .message-error {
+        width: 100%;
+        margin-top: 20px;
+        padding: 2px;
+        border-radius: 4px;
+        font-size: 20px;
+        text-align: center;
+        background-color: var(--color-error);
+        color: var(--color-header);
       }
     `;
     this.shadow.appendChild(divEl);

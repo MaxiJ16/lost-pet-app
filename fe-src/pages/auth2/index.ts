@@ -1,7 +1,6 @@
 import { Router } from "@vaadin/router";
 import { nanoid } from "nanoid";
 import { state } from "../../state";
-
 class Auth extends HTMLElement {
   connectedCallback() {
     this.render();
@@ -10,33 +9,36 @@ class Auth extends HTMLElement {
     const cs = state.getState();
     const { pageBefore, email } = cs.user;
 
-    //Form
-    const formEl = document.querySelector(".auth-form-2") as any;
-    const divMessage = document.querySelector(".message-auth") as any;
+    const msgCom = document.querySelector("msg-comp");
+    // LOADER
+    const preloaderEl = document.querySelector("pre-loader") as any;
 
+    // FORM
+    const formEl = document.querySelector(".auth-form-2") as any;
+    // SUBMIT DEL FORM
     formEl.addEventListener("submit", async (e: any) => {
       e.preventDefault();
+      preloaderEl.style.display = "initial";
 
-      const authData = {
-        email,
-        password: e.target.password.value,
-      };
-
+      // SETEAMOS LA DATA CON EL EMAIL DEL STATE Y LA CONTRASEÑA INGRESADA EN EL INPUT
+      const authData = { email, password: e.target.password.value };
       const authRes = await state.signIn(authData);
 
+      // SI LA PROMESA DEL SIGIN NO SE RESUELVE
       if (authRes.error) {
-        divMessage.style.backgroundColor = "rgb(31, 28, 28)";
-        divMessage.style.color = "#ff6868";
-        divMessage.textContent = authRes.error;
+        preloaderEl.style.display = "none";
+        msgCom.className = "message-error";
+        msgCom.textContent = authRes.error;
       }
-
+      // SI SE RESUELVE NOS DEVUELVE EL TOKEN
       if (authRes.token) {
+        // CON ESE TOKEN PEDIMOS LA DATA DEL USUARIO
         const getUserRes = await state.getUserData(authRes.token);
-
+        // SI LA DATA DEL USUARIO SE RESUELVE
         if (getUserRes) {
-          divMessage.style.backgroundColor = "#ff6868";
-          divMessage.style.color = "white";
-          divMessage.textContent = "Logueado con éxito";
+          preloaderEl.style.display = "none";
+          msgCom.className = "message-exito";
+          msgCom.textContent = "Logueado con éxito";
 
           setTimeout(() => {
             Router.go(pageBefore);
@@ -45,26 +47,23 @@ class Auth extends HTMLElement {
       }
     });
 
-    // Recuperar contraseña
+    // RECUPERAR CONTRASEÑA
     const forgottenPassword = document.querySelector(".auth-form-link");
 
     forgottenPassword.addEventListener("click", async (e) => {
       e.preventDefault();
-      // Creamos la contraseña temporarria con nanoId
+      preloaderEl.style.display = "initial";
+      // CREAMOS LA CONTRASEÑA TEMPORARIA CON NANOID
       const temporaryPassword = nanoid(6);
-    
-      const data = {
-        email,
-        password: temporaryPassword,
-      };
-
+      // LA SETEAMOS
+      const data = { email, password: temporaryPassword };
       const resTemporaryPassword = await state.newPassword(data);
 
-      // Si nos devuelve un 1 es porque la contraseña se cambió correctamente y mostramos el mensaje
+      // SI NOS DEVUELVE UN 1 ES PORQUE LA CONTRASEÑA SE SETEO CORRECTAMENTE
       if (resTemporaryPassword.resNewPass[0] == 1) {
-        divMessage.textContent = resTemporaryPassword.message;
-        divMessage.style.backgroundColor = "#ff6868";
-        divMessage.style.color = "white";
+        preloaderEl.style.display = "none";
+        msgCom.className = "message-exito";
+        msgCom.textContent = resTemporaryPassword.message;
       }
     });
   }
@@ -76,14 +75,14 @@ class Auth extends HTMLElement {
         
           <form class="auth-form-2">
             <label for="password" class="auth-form-label">
-              <my-text>CONTRASEÑA</my-text>
+              <my-text tag="h4">Contraseña</my-text>
             </label>
             <input type="password" class="auth-form-input input" name="password" required>
-            <a class="auth-form-link">OLVIDÉ MI CONTRASEÑA<a/>          
-            <button type="submit" class="auth-form-button button">Ingresar</button>
+            <my-text tag="h4" class="auth-form-link">Olvidé mi contraseña</my-text>          
+            <button type="submit" class="auth-form-button button"><my-text tag="h5">Ingresar</my-text></button>
           </form>
-
-          <div class="message-auth"></div>
+          <pre-loader></pre-loader>
+          <msg-comp></msg-comp>
         </div>
       </section>
     `;

@@ -13,7 +13,7 @@ class EditPet extends HTMLElement {
   connectedCallback() {
     this.render();
   }
-  //Configuramos dropzone
+  // CONFIGURAMOS DROPZONE
   dropzoneConfig() {
     const buttonDropzoneEl = document.querySelector(".dropzone-button") as any;
 
@@ -36,8 +36,8 @@ class EditPet extends HTMLElement {
       }
     });
   }
+  // INICIALIZAMOS MAPBOX
   initMap() {
-    // mapbox
     const mapEl = document.querySelector(".container-map");
 
     mapboxgl.accessToken = MAPBOX_TOKEN;
@@ -47,7 +47,7 @@ class EditPet extends HTMLElement {
       style: "mapbox://styles/mapbox/streets-v11",
     });
   }
-  // Manejamos el estado de la mascota
+  // MANEJAMOS EL ESTADO DE LA MASCOTA
   statePet() {
     const cs = state.getState();
     const { estado } = cs.user.petData;
@@ -57,7 +57,7 @@ class EditPet extends HTMLElement {
     // Botón de estado
     const stateButton = document.querySelector(".state-button") as any;
 
-    // Si el estado no es encontrado
+    // SI EL ESTADO "NO" ES ENCONTRADO
     if (estado !== "ENCONTRADO") {
       // El texto es Reportar como perdido
       stateButton.textContent = "Reportar como encontrado";
@@ -78,7 +78,7 @@ class EditPet extends HTMLElement {
       });
     }
 
-    // Si el estado no es perdido
+    // SI EL ESTADO "NO" ES PERDIDO
     if (estado !== "PERDIDO") {
       // El texto es Reportar como encontrado
       stateButton.textContent = "Reportar como perdido";
@@ -98,7 +98,7 @@ class EditPet extends HTMLElement {
       });
     }
   }
-  // Función para rellenar con los datos de la mascota el formulario
+  // FUNCIÓN PARA RELLENAR LOS DATOS DEL FORMULARIO CON LOS QUE YA TIENE
   pullPetData() {
     const cs = state.getState();
 
@@ -125,20 +125,22 @@ class EditPet extends HTMLElement {
     this.map.setCenter(coord);
     this.map.setZoom(14);
   }
-  // Esta función chequea si el objeto petData no está vacío y sube los cambios
+  // FUNCIÓN PARA CHEQUEAR QUE EL OBJ PETDATA NO ESTÉ VACÍO Y SUBE LOS CAMBIOS
   async checkKeys() {
     const cs = state.getState();
     const { petId } = cs.user.petData;
 
     // Buscamos el div para pegar nuestros mensajes de éxito o error
-    const div = document.querySelector(".message") as any;
+    const msgCom = document.querySelector("msg-comp");
+    const preloaderEl = document.querySelector("pre-loader") as any;
 
     // si el objeto petData no tiene propiedades es porque no se realizaron cambios
     const objectKeys = Object.keys(petData).length == 0;
 
     if (objectKeys !== false) {
-      div.className = "error";
-      div.textContent = "No realizaste ningún cambio";
+      preloaderEl.style.display = "none";
+      msgCom.className = "message-error";
+      msgCom.textContent = "No realizaste ningún cambio";
     }
     // Si el objeto tiene propiedades sufrió cambios entonces modificamos la mascota
     if (objectKeys !== true) {
@@ -147,28 +149,29 @@ class EditPet extends HTMLElement {
 
       // Si se cumple la respuesta
       if (resEditPet.message) {
-        div.style.backgroundColor = "#ff6868";
-        div.style.color = "white";
-        div.textContent = resEditPet.message;
+        preloaderEl.style.display = "none";
+        msgCom.className = "message-exito";
+        msgCom.textContent = resEditPet.message;
       }
 
       // Si la respuesta devuelve un error
       if (resEditPet.error) {
-        div.className = "error";
-        div.textContent = resEditPet.error;
+        preloaderEl.style.display = "none";
+        msgCom.className = "message-error";
+        msgCom.textContent = resEditPet.error;
       }
     }
   }
   addListeners() {
     const cs = state.getState();
     // MAPBOX CONFIG
-    const locationValue = document.querySelector(
-      ".location-input"
-    ) as HTMLInputElement;
+    const locationValue = document.querySelector(".location-input") as HTMLInputElement;
 
+    // LOADER
+    const preloaderEl = document.querySelector("pre-loader") as any;
+    
     // Botón para la búsqueda de la ubicación
     const buttonSearch = document.querySelector(".button-search") as any;
-    buttonSearch.style.backgroundColor = "#ff6868";
 
     buttonSearch.addEventListener("click", (e) => {
       e.preventDefault();
@@ -204,13 +207,13 @@ class EditPet extends HTMLElement {
     const { namePet, locationPet, petId } = cs.user.petData;
 
     // Buscamos el div para pegar nuestros mensajes de éxito o error
-    const div = document.querySelector(".message") as any;
+    const msgCom = document.querySelector("msg-comp");
 
     //form
     const formEl = document.querySelector(".edit-form") as any;
     formEl.addEventListener("submit", async (e: any) => {
       e.preventDefault();
-      div.textContent = "Espera un momento, modificando mascota...";
+      preloaderEl.style.display = "initial";
 
       // Si el nombre y la locación en el state es distinto al que enviamos por el form,
       // cambiamos el valor para modificar la mascota, si es igual no lo modifica
@@ -235,19 +238,20 @@ class EditPet extends HTMLElement {
 
     deleteLink.addEventListener("click", async (e) => {
       e.preventDefault();
+      preloaderEl.style.display = "initial";
       const resDeletePet = await state.eliminatePet(petId);
       // Si se eliminó correctamente
       if (resDeletePet.message) {
-        div.style.backgroundColor = "#ff6868";
-        div.textContent = resDeletePet.message;
+        msgCom.className = "message-exito";
+        msgCom.textContent = resDeletePet.message;
         setTimeout(() => {
           Router.go("/my-pets");
         }, 2500);
       }
       // Si la respuesta devuelve un error
       if (resDeletePet.error) {
-        div.className = "error";
-        div.textContent = resDeletePet.error;
+        msgCom.className = "message-error";
+        msgCom.textContent = resDeletePet.error;
       }
     });
   }
@@ -265,28 +269,31 @@ class EditPet extends HTMLElement {
           
           <form class="edit-form">
             <label for="name" class="namePet-label">
-              <my-text>Nombre</my-text>
+              <my-text tag="h4">Nombre</my-text>
               <input class="name-input input" type="text" id="name" name="name" required>
             </label>
 
             <img class="pet-picture" src=""></img>
-            <p class="button dropzone-button">Agregar/Modificar foto</p>
+            <a class="button dropzone-button">Agregar/Modificar foto</a>
             
             <label for="location" class="location-label">
-              <p>Buscá un punto de referencia para reportar a tu mascota. Puede ser una dirección, un barrio o una ciudad.</p>
-              <my-text>Ubicación</my-text>
-              <input class="location-input input" type="search" id="location" name="location" required>
-              <button class="button button-search">Buscar</button>
+              <my-text tag="h4">Buscá un punto de referencia para reportar a tu mascota. Puede ser una dirección, un barrio o una ciudad.</my-text>
+              <div class="ubication">
+                <my-text tag="h4">Ubicación</my-text>
+                <input class="location-input input" type="search" id="location" name="location" required>
+              </div>
+              <button class="button button-search"><my-text tag="h5">Buscar</my-text></button>
               <div class="container-map" style='width: 100%; height: 300px;'></div>         
             </label>
             
             <button type="submit" class="button state-button"></button>
             
-            <button class="button">Guardar</button>
+            <button class="button"><my-text tag="h5">Guardar</my-text></button>
           </form>
 
-          <a class="unpublish-link">DESPUBLICAR</a>
-          <div class="message"></div>
+          <my-text tag="h4" class="unpublish-link">Despublicar</my-text>
+          <pre-loader></pre-loader>
+          <msg-comp></msg-comp>
         </div>
       </section>
     `;

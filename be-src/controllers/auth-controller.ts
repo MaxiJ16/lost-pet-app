@@ -18,16 +18,10 @@ export async function signInUser(userData: { email: string; password }) {
   // hasheamos el password que nos pasan por el body
   const passwordHasheado = getSHA256ofString(password.toString());
 
-  // vamos a buscar a alguien en  la tabla Auth
-  const auth = await Auth.findOne({
-    // Queremos el registro de la tabla auth que tenga el mismo email y password
-    where: {
-      email,
-      password: passwordHasheado,
-    },
-  });
+  // buscamos en la tabla auth el registro que tenga el email y contraseña que nos pasan
+  const auth = await Auth.findOne({ where:{ email, password: passwordHasheado }});
 
-  // si tengo algo para devolver lo devuelvo así
+  // si encontró un registro que coincida
   if (auth) {
     // creamos un token a partir de la data de esta persona, solo nos interesa el id
     const token = jwt.sign({ id: auth["userId"] }, SECRET);
@@ -38,10 +32,7 @@ export async function signInUser(userData: { email: string; password }) {
 }
 
 // Función para generar una nueva contraseña si se olvidó el usuario
-export async function newPassword(userData: {
-  email: string;
-  password: string;
-}) {
+export async function newPassword(userData: { email: string; password: string }) {
   const { email, password } = userData;
 
   if (!email || !password) {
@@ -51,25 +42,19 @@ export async function newPassword(userData: {
   // hasheamos el password que nos pasan por el body
   const passwordHasheado = getSHA256ofString(password.toString());
 
-  // Se modifica la contraseña en la tabla auth
-  const resNewPass = await Auth.update(
-    { password: passwordHasheado },
-    { where: { email } }
-  );
-
-  const dataPassword = {
-    email,
-    newPassword: password,
-  };
-
+  // Se modifica la contraseña en la db - tabla auth
+  const resNewPass = await Auth.update({ password: passwordHasheado }, { where: { email } });
+  // creamos el objeto con el email y la nueva contraseña
+  const dataPassword = { email, newPassword: password };
+  // pasamos el objeto a la función de sendgrid
   const resTemporaryPassword = await temporaryPassword(dataPassword);
-  const res = resTemporaryPassword.res;
 
+  // si se cumple la promesa y obtenemos la respuesta:
+  const res = resTemporaryPassword.res;
   if (res) {
     return {
       resNewPass,
-      message:
-        "Revisá tu correo electrónico, se envío una contraseña provisoria",
+      message: `Revisá tu correo, se envío una contraseña provisoria. "Aclaración": puede estar en spam o promociones.`,
       res,
     };
   }

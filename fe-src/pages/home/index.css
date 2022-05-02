@@ -1,17 +1,30 @@
 .page-home {
   padding: 33px 20px;
-  height: 80vh;
-  max-width: 769px;
+  max-width: 670px;
   margin: 0 auto;
+  margin-bottom: 20px;
 }
 
 .title {
+  text-align: left;
+}
+
+.text {
   text-align: center;
 }
 
 .container {
   display: grid;
   gap: 25px;
+}
+
+@media(min-width:769px){
+  .container {
+    display: flex;
+    flex-direction: column;
+    margin-top: 30px;
+    align-items: center;
+  }
 }
 
 .container-form {

@@ -14,21 +14,13 @@ export function getSHA256ofString(text: string) {
 
 // chequea el token que le pasamos en el header, en vez de responder directamente con la data invoca a next()
 export function authMiddleware(req, res, next) {
-  // para obtener el token hacemos un split
-  // con ese split le decimos que cuando encuentre un espacio parta el texto en dos y elijamos la posición uno donde está el token
+  // para obtener el token hacemos un split del header authorization
   const token = req.headers.authorization.split(" ")[1];
 
-  // para capturar errores usamos try y catch
-  // el código que está en try se evalúa, si en algún punto dispara un error entra al catch
   try {
-    // desencriptamos el token con json web token y su f verify
-    // como 1er parametro usa el token y segundo el SECRET
+    // desencriptamos el token con json web token y su f verify, como 1er parametro usa el token y segundo el SECRET
     const data = jwt.verify(token, SECRET);
-    // data contiene esto
-    //   {
-    //     "id": 5,
-    //     "iat": 1647639813
-    // }
+    // data devuelve el id del user
     // para que la data le llegue a /me se lo agregamos al req
     req._userData = data;
     next();
@@ -37,6 +29,7 @@ export function authMiddleware(req, res, next) {
   }
 }
 
+// CHEQUEA QUE EL BODY SE HAYA MANDADO CORRECTAMENTE
 export async function bodyMiddleware(req, res, next) {
   if (req.body) {
     next();
@@ -45,8 +38,7 @@ export async function bodyMiddleware(req, res, next) {
   }
 }
 
-// Función para transformar un item del body a un item para el indice de algolia
-// recibimos un objeto en un formato y lo devolvemos en otro formato
+// F para transformar un item del body a un item para el indice de algolia, recibimos un objeto en un formato y lo devolvemos en otro formato
 
 export function bodyToIndex(body, id?) {
   // este es nuestro objeto respuesta

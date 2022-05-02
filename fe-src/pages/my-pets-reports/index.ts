@@ -6,17 +6,21 @@ class MyPets extends HTMLElement {
     this.render();
   }
   async listeners() {
-    // Buscamos las referencias
+    // BUSCAMOS LAS REFERENCIAS
     const noReportsEl = document.querySelector(".no-reports") as any;
     const cardsContainer = document.querySelector(".cards-container") as any;
+    
+    const preloaderEl = document.querySelector("pre-loader") as any;
+    preloaderEl.style.display = "initial";
 
     // Esperamos la respuesta de las mascotas que reportó el usuario
     const resUserPets = await state.userPets();
     // De la respuesta guardamos todas las mascotas
     const allPetsUser = resUserPets.allPets;
 
-    // Si la cantidad de mascotas es (> a 0) las mostramos
+    // Si la cantidad de mascotas es mayor a 0 las mostramos
     if (resUserPets.amount > 0) {
+      preloaderEl.style.display = "none";
       // For of para recorrer todas las mascotas
       for (const pet of allPetsUser) {
         // Obtenemos los datos de cada mascota
@@ -39,8 +43,9 @@ class MyPets extends HTMLElement {
         cardsContainer.appendChild(petcardCont);
       }
     }
-    // Si la cantidad de mascotas es (< a 0) largamos este msj
+    // Si la cantidad de mascotas es menor a 0 mostramos este mensaje
     if (resUserPets.amount == 0) {
+      preloaderEl.style.display = "none";
       noReportsEl.textContent = "Aún no reportaste mascotas perdidas";
     }
   }
@@ -52,6 +57,7 @@ class MyPets extends HTMLElement {
           <h2 class="no-reports"></h2>
         </div>
         <div class="cards-container"></div>
+        <pre-loader></pre-loader>
       </section>
     `;
     this.listeners();

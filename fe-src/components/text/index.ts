@@ -1,6 +1,6 @@
 export class Text extends HTMLElement {
   shadow: ShadowRoot;
-  tags: string[] = ["h1", "h3", "h4", "p", "h5"];
+  tags: string[] = ["h1","h2", "h3", "h4", "p", "h5", "link"];
   tag: string = "p";
 
   constructor() {
@@ -36,6 +36,13 @@ export class Text extends HTMLElement {
       h3 {
         font-size: 24px;
         font-weight: 400;
+        margin: 0;
+      }
+
+      h4 {
+        font-size: 16px;
+        text-transform: uppercase;
+        font-weight: 500;
         margin: 0;
       }
 

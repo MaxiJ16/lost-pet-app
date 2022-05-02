@@ -1,6 +1,7 @@
+/* CONTAINER PAGE */
 .nav-container {
   padding: 13px 20px;
-  background-color: #ff6868;
+  background-color: var(--color-header);
   height: 60px;
   display: flex;
   justify-content: space-between;
@@ -8,15 +9,21 @@
 }
 
 @media (min-width: 769px) {
+  .nav-container {
+    height: auto;
+  }
+}
+
+@media (min-width: 769px) {
   .nav-container__menu-burguer {
     display: none;
   }
 }
-
+/* VENTANA QUE SE ABRE AL TOCAR EL BUTTON BURGUER */
 .nav-container__menu-window {
   display: none;
-  color: white;
-  background-color: #8af1ff;
+  color: var(--color-link3);
+  background-color: var(--color-menuBurguer);
   position: absolute;
   top: 0;
   left: 0;
@@ -33,10 +40,12 @@
   }
 }
 
+/* X QUE SE GENERA EN LA VENTANA */
 .menu-window__containerX {
   display: grid;
   grid-template-columns: 1fr;
   margin-right: 1.5rem;
+  margin-bottom: 30px;
 }
 
 @media (min-width: 769px) {
@@ -53,45 +62,69 @@
 }
 
 .menu-window__contents {
+  color: var(--color-white);
   display: flex;
-  color: white;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
   text-align: center;
-  height: 80vh;
-  font-size: 24px;
+  height: 100vh;
+  width: 278px;
+  margin: 0 auto;
 }
 
 @media (min-width: 769px) {
   .menu-window__contents {
-    font-size: 20px;
     flex-direction: row;
     align-items: center;
-    justify-content: flex-end;
-    height: 9vh;
+    height: auto;
+    width: auto;
   }
 }
 
 .menu-window__contents-title {
-  color: black;
+  color: var(--color-black);
   text-decoration: none;
+  margin-bottom: 45px;
 }
 
 @media (min-width: 769px) {
   .menu-window__contents-title {
-    margin-left: 20px;
+    margin: 0;
+    margin-right: 25px;
   }
 }
 
 .session-data {
-  margin-top: 100px;
+  margin-top: 85px;
 }
 
 @media(min-width: 769px){
   .session-data {
-    margin-top: 3px;
-    margin-left: 10px;
+    margin: 0;
     display: flex;
+    color: var(--color-white);
+  }
+}
+
+.session {
+  color: var(--color-link3);
+  text-decoration: underline;
+}
+
+
+@media (min-width: 769px) {
+  .session{
+    margin-left: 25px;
+  }
+}
+
+.session:hover {
+  color: var(--color-link-hover);
+  text-decoration: none;
+}
+
+@media (min-width: 769px) {
+  .session:hover{
+    color: var(--color-link);
   }
 }

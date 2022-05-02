@@ -35,8 +35,9 @@ export class PawPet extends HTMLElement {
     shadow.appendChild(div);
 
     const pawPetImg = div.querySelector(".regular");
+
     pawPetImg.addEventListener("click", () => {
-      Router.go("/")
+      Router.go("/");
     });
   }
 }

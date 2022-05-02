@@ -6,40 +6,53 @@
   margin-bottom: 200px;
 }
 
+.edit-container {
+  display: grid;
+  gap: 30px;
+}
+
 /* FORMULARIO */
 
 .edit-form {
   display: grid;
-  gap: 15px;
+  gap: 20px;
 }
 
 .pet-picture {
   width: 100%;
-  max-height: 400px;
+  max-height: 200px;
   object-fit: cover;
 }
 
+/* LABEL UBICATION */
+
+.ubication {
+  margin-top: 15px;
+}
+
+/* BUTTONS */
+
 .button-cancel {
-  background-color: #CDCDCD;
+  background-color: var(--color-button3);
 }
 
 .button-search {
   margin-bottom: 10px;
+  background-color: var(--color-header);
 }
 
-.state-button {
-  background-color: #97EA9F;
+.state-button, .dropzone-button {
+  background-color: var(--color-button2);
 }
 
 .dropzone-button {
-  background-color:  #97EA9F;
-  text-align: center;
-  min-height: 50px;
   height: auto;
+  min-height: 50px;
   padding: 10px;
   display: grid;
-  align-items: center;
   gap: 10px;
+  align-items: center;
+  text-align: center;
 }
 
 /* LINK DE DESPUBLICAR */
@@ -48,31 +61,18 @@
   text-decoration: underline; 
   display: flex;
   justify-content: center;
-  color: #FF3A3A;
-  margin-top: 25px;
+  color: var(--color-link4);
+  margin-bottom: 15px;
 }
 
 .unpublish-link:hover {
   text-decoration: none; 
-  color: violet;
+  color: var(--color-link3);
 }
 
 /* SACAMOS LAS MARCAS QUE NOS PONE MAPBOX */
 
 .dz-success-mark, .dz-error-message, .dz-progress, .dz-details, .dz-error-mark, .dz-default, .mapboxgl-ctrl-attrib-inner,  .mapboxgl-ctrl-attrib-button {
   display: none;
-}
-
-.message, .error {
-  margin-top: 30px;
-  padding: 5px;
-  border-radius: 4px;
-  font-size: 20px;
-  text-align: center;
-}
-
-.error {
-  background-color:rgb(31, 28, 28) ;
-  color: #ff6868;
 }
 

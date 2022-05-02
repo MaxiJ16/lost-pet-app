@@ -2,6 +2,7 @@ const sgMail = require("@sendgrid/mail");
 
 sgMail.setApiKey(process.env.SENDGRID_APIK);
 
+// F PARA ENVIAR POR MAIL EL REPORTE DE LA MASCOTA
 export async function sendEmailReport(reportData) {
   const { reporter, phone_number, message, petName, userEmail, userName } =
     reportData;
@@ -18,6 +19,7 @@ export async function sendEmailReport(reportData) {
   return { message: "Información enviada! :)", res: mailSentRes };
 }
 
+// F PARA ENVIAR POR MAIL LA CONTRASEÑA TEMPORARIA
 export async function temporaryPassword(authData: { email; newPassword }) {
   const { email, newPassword } = authData;
 

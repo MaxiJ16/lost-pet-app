@@ -6,17 +6,36 @@
   margin-bottom: 200px;
 }
 
-.report-form {
+.report-container {
   display: grid;
-  gap: 15px;
+  gap: 30px;
 }
 
+/* FORMULARIO */
+.report-form {
+  display: grid;
+  gap: 20px;
+}
+
+.location-p {
+  font-size: 16px;
+  text-transform: uppercase;
+  font-weight: 500;
+  margin: 0;
+  margin-bottom: 25px;
+}
+
+pre-loader {
+  display: none;
+}
+
+/* BUTTONS */
 .button-cancel {
-  background-color: #CDCDCD;
+  background-color: var(--color-button3);
 }
 
 .dropzone-button {
-  background-color:  #97EA9F;
+  background-color:  var(--color-button2);
   text-align: center;
   min-height: 50px;
   height: auto;
@@ -28,23 +47,11 @@
 
 .button-search {
   margin-bottom: 10px;
+  background-color: var(--color-header);
 }
 
+/* MAPBOX */
 .dz-success-mark, .dz-error-message, .dz-progress, .dz-details, .dz-error-mark, .dz-default, .mapboxgl-ctrl-attrib-inner,  .mapboxgl-ctrl-attrib-button {
   display: none;
-}
-
-.message, .error {
-  color: white;
-  margin-top: 30px;
-  padding: 5px;
-  border-radius: 4px;
-  font-size: 20px;
-  text-align: center;
-}
-
-.error {
-  background-color:rgb(31, 28, 28) ;
-  color: #ff6868;
 }
 

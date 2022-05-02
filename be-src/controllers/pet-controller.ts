@@ -3,7 +3,7 @@ import { index } from "../lib/algolia";
 import { cloudinary } from "../lib/cloudinary";
 import { bodyToIndex } from "../middleware/middleware";
 
-// Función para Reportar una nueva mascota
+// REPORTAR/CREAR MASCOTA PERDIDA
 export async function createPet(
   petData: {
     name: string;
@@ -28,14 +28,10 @@ export async function createPet(
     return { error: "Faltan datos de la mascota" };
   }
 
-  //subimos la imágen con upload de cloudinary
-  // el 1er parametro es la imágen y el segundo el obj con la configuración
+  //subimos la imágen con upload de cloudinary, el 1er parametro es la imágen y el segundo el obj con la configuración
   const petImage = await cloudinary.uploader.upload(pictureURL, {
-    // esto es el tipo que estamos subiendo, xq tmb soporta videos
     resource_type: "image",
-    //que no use el nombre original que le estoy mandando así no se choca con otras imágenes
     discard_original_filename: true,
-    // y que limite el ancho a mil así no se suben img gigantes
     width: 1000,
   });
 
@@ -49,6 +45,7 @@ export async function createPet(
     location,
     userId,
   });
+
   // Creamos la mascota en algolia
   const algoliaCreatePet = await index.saveObject({
     objectID: createPet["id"],
@@ -69,7 +66,7 @@ export async function createPet(
   };
 }
 
-// Función para modificar los datos de la mascota
+// MODIFICAR LOS DATOS DE LA MASCOTA
 export async function modifiedPet(petData, petId: number) {
   if (!petData && !petId) {
     return { error: " Faltan datos de la mascota" };
@@ -84,17 +81,13 @@ export async function modifiedPet(petData, petId: number) {
     petData.pictureURL = imgUpload.url;
   }
 
-  // Modificamos la mascota en la db
-  const petModif = await Pet.update(petData, {
-    where: {
-      id: petId,
-    },
-  });
+  // MODIFICAMOS EN LA BASE DE DATOS
+  const petModif = await Pet.update(petData, { where: { id: petId } });
 
-  // Transformamos el objeto para poder modificarlo en algolia
+  // TRANSFORMAMOS EL OBJETO PET DATA PARA PODER SUBIRLO A ALGOLIA
   const indexItem = bodyToIndex(petData, petId);
 
-  // Guardamos la modificación en algolia
+  // MODIFICAMOS EN ALGOLIA
   const algoliaPetRes = await index.partialUpdateObject(indexItem);
 
   return {
@@ -104,23 +97,18 @@ export async function modifiedPet(petData, petId: number) {
   };
 }
 
-// Función para buscar todas las mascotas
-export async function findAllPets() {
-  return await Pet.findAll();
-}
+// BUSCA TODAS LAS MASCOTAS
+export async function findAllPets() { return await Pet.findAll() }
 
-// Función para buscar las mascotas reportadas de un usuario
+// BUSCA TODAS LAS MASCOTAS DE UN USUARIO
 export async function findUserPets(userId: number) {
   if (!userId) {
     return { error: "Es necesario el id del usuario" };
   }
-  // Busca todas las mascotas publicadas por ese userId
-  const allPets = await Pet.findAll({
-    where: {
-      userId,
-    },
-  });
 
+  // BUSCAMOS EN LA BASE DE DATOS
+  const allPets = await Pet.findAll({ where: { userId }});
+  // AMOUNT HACE REFERENCIA A LA CANTIDAD DE MASCOTAS REPORTADAS POR ESE USUARIO
   return {
     allPets,
     amount: allPets.length,
@@ -128,14 +116,14 @@ export async function findUserPets(userId: number) {
   };
 }
 
-// Función para eliminar una mascota
+// DELETE PED
 export async function deletePet(petId: number) {
   if (!petId) {
     return { error: "Es necesario el id de la mascota" };
   }
-
+  // DELETE IN DB
   await Pet.destroy({ where: { id: petId } });
-
+  // DELETE IN ALGOLIA
   const objectID = petId.toString();
   await index.deleteObject(objectID);
 
@@ -144,7 +132,7 @@ export async function deletePet(petId: number) {
   };
 }
 
-// Función para buscar mascotas perdidas cerca
+// BUSCA MASCOTAS PERDIDAS CERCA DE UNA UBICACIÓN
 export async function findLostPetNear(lat, lng) {
   if (!lat && !lng) {
     return { error: "Faltan datos para buscar las mascotas" };
@@ -162,12 +150,7 @@ export async function findLostPetNear(lat, lng) {
     return hits.objectID;
   });
   // Con esos id hacemos la búsqueda en la base de datos y agregamos que su estado tiene que ser perdido
-  const findPet = await Pet.findAll({
-    where: {
-      id: idPetsLost,
-      state: "PERDIDO",
-    },
-  });
+  const findPet = await Pet.findAll({ where: { id: idPetsLost, state: "PERDIDO" }});
 
   return {
     findPet,

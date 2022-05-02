@@ -8,7 +8,6 @@ import { state } from "../../state";
 
 class ReportPets extends HTMLElement {
   map: any;
-
   connectedCallback() {
     this.render();
   }
@@ -17,7 +16,7 @@ class ReportPets extends HTMLElement {
     const cs = state.getState();
     const { lat, lng } = cs.user._geoloc;
 
-    //Configuramos dropzone
+    // CONFIGURAMOS DROPZONE
     const buttonDropzoneEl = document.querySelector(".dropzone-button") as any;
 
     const myDropzone = new Dropzone(buttonDropzoneEl, {
@@ -33,21 +32,22 @@ class ReportPets extends HTMLElement {
     myDropzone.on("thumbnail", function (file) {
       imageUrl = file.dataURL;
     });
-
-    // Buscamos el div para pegar nuestros mensajes de éxito o error
-    const div = document.querySelector(".message") as any;
-    const cancelButton = document.querySelector(".button-cancel") as any;
     
+    const cancelButton = document.querySelector(".button-cancel") as any;
     cancelButton.addEventListener("click", () => {
       Router.go("/");
     });
+
+    // Buscamos el div para pegar nuestros mensajes de éxito o error
+    const msgEl = document.querySelector("msg-comp") as any;
+    const preloaderEl = document.querySelector("pre-loader") as any;
 
     //form
     const formEl = document.querySelector(".report-form") as any;
     formEl.addEventListener("submit", async (e: any) => {
       e.preventDefault();
 
-      div.textContent = "Espera un momento, cargando mascota...";
+      preloaderEl.style.display = "initial";
 
       // Tomamos los datos de la mascota y los ponemos en el objeto petData
       const petData = {
@@ -64,18 +64,20 @@ class ReportPets extends HTMLElement {
 
       // Si se cumple la respuesta
       if (resNewPet.message) {
-        div.style.backgroundColor = "#ff6868";
-        div.textContent = resNewPet.message;
+        preloaderEl.style.display = "none";
+        msgEl.className = "message-exito"
+        msgEl.textContent = resNewPet.message;
         // Una vez creada la mascota lo redirige a sus mascotas reportadas
         setTimeout(() => {
-          Router.go("/my-pets")
+          Router.go("/my-pets");
         }, 2000);
       }
 
       // Si la respuesta devuelve un error
       if (resNewPet.error) {
-        div.className = "error";
-        div.textContent = resNewPet.error;
+        preloaderEl.style.display = "none";
+        msgEl.className = "message-error";
+        msgEl.textContent = resNewPet.error;
       }
     });
   }
@@ -93,29 +95,33 @@ class ReportPets extends HTMLElement {
           <form class="report-form">
             
             <label for="name" class="namePet-label">
-              <my-text>Nombre</my-text>
+              <my-text tag="h4">Nombre</my-text>
               <input class="name-input input" type="text" id="name" name="name" required>
             </label>
 
             <p class="button dropzone-button">Agregar/Modificar foto</p>
             
             <label for="location" class="location-label">
-              <p>Buscá un punto de referencia para reportar a tu mascota. Puede ser una dirección, un barrio o una ciudad.</p>
-              <my-text>Ubicación</my-text>
+              <p class="location-p">Buscá un punto de referencia para reportar a tu mascota. Puede ser una dirección, un barrio o una ciudad.</p>
+    
+              <my-text tag="h4">Ubicación</my-text>
               <input class="location-input input" type="search" id="location" name="location" required>
+              
               <button class="button button-search">Buscar</button>
               <div class="container-map" style='width: 100%; height: 300px;'></div>         
             </label>
             
             <button type="submit" class="button lost-button">Reportar como perdido</button>
+            </form>
+            
             <button class="button button-cancel">Cancelar</button>
-          </form>
-          <div class="message"></div>
+            <pre-loader></pre-loader>
+            <msg-comp></msg-comp>
         </div>
       </section>
     `;
 
-    // mapbox
+    // MAPBOX
     const mapa = document.querySelector(".container-map");
     const locationValue = document.querySelector(
       ".location-input"
@@ -130,9 +136,8 @@ class ReportPets extends HTMLElement {
       });
     }
 
-    // Botón para la búsqueda de la ubicación
+    // BUTTON PARA BUSCAR LA UBICACIÓN
     const buttonSearch = document.querySelector(".button-search") as any;
-    buttonSearch.style.backgroundColor = "#ff6868";
 
     function initSearchForm(callback) {
       buttonSearch.addEventListener("click", (e) => {
@@ -146,14 +151,13 @@ class ReportPets extends HTMLElement {
             language: "es",
           },
           function (err, data, res) {
-            console.log(data);
             if (!err) callback(data.features);
           }
         );
       });
     }
 
-    // Ejecutamos la función para que funcione Mapbox
+    // FUNCTION AUTOEJECUTABLE PARA QUE FUNCIONE MAPBOX
     (function () {
       let map = initMap();
 

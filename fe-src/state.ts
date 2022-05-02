@@ -1,5 +1,5 @@
-const API_BASE_URL = process.env.API_BASE_URL || "http://localhost:3000";
-
+const API_BASE_URL = "http://localhost:3000";
+// process.env.API_BASE_URL ||
 const state = {
   data: {
     user: {
@@ -22,6 +22,7 @@ const state = {
     },
   },
   listeners: [],
+  // INICIALIZAMOS EL STATE
   init() {
     const lastStorage = JSON.parse(localStorage.getItem("userData"));
 
@@ -77,9 +78,48 @@ const state = {
     cs.user._geoloc.lng = lng;
     this.setState(cs);
   },
-  // Cerrar sesión
+  // CREATE USER
+  async signUp(userData: { fullname; email; password }) {
+    const resAuth = await fetch(API_BASE_URL + `/auth`, {
+      method: "POST",
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userData),
+    });
+
+    const data = await resAuth.json();
+
+    return data;
+  },
+  // INICIAR SESIÓN
+  async signIn(authData: { email: string; password }) {
+    const cs = state.getState();
+
+    const resSignIn = await fetch(API_BASE_URL + "/auth/token", {
+      method: "POST",
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(authData),
+    });
+
+    const data = await resSignIn.json();
+
+    if (data.token) {
+      cs.user.token = data.token;
+      this.setState(cs);
+    }
+
+    return data;
+  },
+  // CERRAR SESIÓN
   closeSessionUser() {
+    // REMOVEMOS EL ITEM DEL LOCALSTORAGE
     localStorage.removeItem("userData");
+    // EL ESTADO VUELVE A TENER SUS VALORES INICIALES
     state.setState({
       user: {
         fullname: "",
@@ -100,13 +140,14 @@ const state = {
       },
     });
   },
-  // Chequear si el email existe
+  // CHEQUEA EL EMAIL
   async checkEmail(emailData) {
     const cs = this.getState();
 
     const resEmail = await fetch(API_BASE_URL + "/auth/emailCheck", {
       method: "POST",
       headers: {
+        "Access-Control-Allow-Origin": "*",
         "content-type": "application/json",
       },
       body: JSON.stringify(emailData),
@@ -115,47 +156,13 @@ const state = {
     cs.user.emailExist = data;
     return data;
   },
-  // Crear el usuario
-  async signUp(userData: { fullname; email; password }) {
-    const resAuth = await fetch(API_BASE_URL + `/auth`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(userData),
-    });
-
-    const data = await resAuth.json();
-
-    return data;
-  },
-  // Iniciar sesión
-  async signIn(authData: { email: string; password }) {
-    const cs = state.getState();
-
-    const resSignIn = await fetch(API_BASE_URL + "/auth/token", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(authData),
-    });
-
-    const data = await resSignIn.json();
-
-    if (data.token) {
-      cs.user.token = data.token;
-      this.setState(cs);
-    }
-
-    return data;
-  },
-  // Obtener la data del usario con el token
+  // OBTIENE LA DATA DEL USER CON EL TOKEN
   async getUserData(token) {
     const cs = this.getState();
 
     const resUserData = await fetch(API_BASE_URL + "/me", {
       headers: {
+        "Access-Control-Allow-Origin": "*",
         Authorization: `bearer ${token}`,
       },
     });
@@ -164,21 +171,7 @@ const state = {
     this.setState(cs);
     return data;
   },
-  // Cuando el usuario olvida la contraseña, para cambiarla
-  async newPassword(authData: { email: string; password }) {
-    const resNewPassword = await fetch(API_BASE_URL + "/auth/forgot", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(authData),
-    });
-
-    const data = await resNewPassword.json();
-
-    return data;
-  },
-  // modificar un usuario
+  // MODIFICAR USUARIO
   async modifiedUser(userData) {
     const cs = this.getState();
     const { token } = cs.user;
@@ -186,6 +179,7 @@ const state = {
     const resModifiedUser = await fetch(API_BASE_URL + "/auth", {
       method: "PUT",
       headers: {
+        "Access-Control-Allow-Origin": "*",
         "content-type": "application/json",
         Authorization: `bearer ${token}`,
       },
@@ -195,11 +189,26 @@ const state = {
     const data = await resModifiedUser.json();
     return data;
   },
-  // Crear un reporte
+  // CUANDO EL USER OLVIDA LA CONTRASEÑA
+  async newPassword(authData: { email: string; password }) {
+    const resNewPassword = await fetch(API_BASE_URL + "/auth/forgot", {
+      method: "POST",
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(authData),
+    });
+
+    const data = await resNewPassword.json();
+    return data;
+  },
+  // CREA UN REPORTE
   async createReport(reportData) {
     const resReport = await fetch(API_BASE_URL + `/report`, {
       method: "POST",
       headers: {
+        "Access-Control-Allow-Origin": "*",
         "Content-Type": "application/json",
       },
       body: JSON.stringify(reportData),
@@ -209,7 +218,7 @@ const state = {
 
     return data;
   },
-  // Reportar una mascota
+  // CREAR UNA MASCOTA PERDIDA
   async newPet(petData) {
     const cs = this.getState();
     const { token } = cs.user;
@@ -217,6 +226,7 @@ const state = {
     const resNewPet = await fetch(API_BASE_URL + `/pet`, {
       method: "POST",
       headers: {
+        "Access-Control-Allow-Origin": "*",
         "Content-Type": "application/json",
         Authorization: `bearer ${token}`,
       },
@@ -224,30 +234,28 @@ const state = {
     });
 
     const data = await resNewPet.json();
-
     return data;
   },
-  // Mis mascotas Reportadas
+  // OBTIENE LAS MASCOTAS PERDIDAS DEL USUARIO
   async userPets() {
     const cs = this.getState();
     const { token } = cs.user;
 
     const resUserPets = await fetch(API_BASE_URL + `/pet/allUserPets`, {
       headers: {
+        "Access-Control-Allow-Origin": "*",
         Authorization: `bearer ${token}`,
       },
     });
 
     const data = await resUserPets.json();
-
     if (data.amount) {
       cs.user.petReports = data.amount;
       this.setState(cs);
     }
-
     return data;
   },
-  // modificar mascota
+  // MODIFICAR UNA MASCOTA
   async modifiedPet(petData, petId: number) {
     const cs = this.getState();
     const { token } = cs.user;
@@ -255,6 +263,7 @@ const state = {
     const resModifiedPet = await fetch(API_BASE_URL + `/pet/${petId}`, {
       method: "PUT",
       headers: {
+        "Access-Control-Allow-Origin": "*",
         "content-type": "application/json",
         Authorization: `bearer ${token}`,
       },
@@ -264,7 +273,7 @@ const state = {
     const data = await resModifiedPet.json();
     return data;
   },
-  // Eliminar mascota
+  // ELIMINAR MASCOTA
   async eliminatePet(petId: number) {
     const cs = this.getState();
     const { token } = cs.user;
@@ -272,28 +281,30 @@ const state = {
     const resDeletePet = await fetch(API_BASE_URL + `/pet/${petId}`, {
       method: "DELETE",
       headers: {
+        "Access-Control-Allow-Origin": "*",
         Authorization: `bearer ${token}`,
       },
     });
-
     const data = await resDeletePet.json();
-
     if (data.message) {
       cs.user.petData = "";
       this.setState(cs);
     }
-
     return data;
   },
-  // Buscar mascotas cerca de la ubicación del usuario
-  async lostPetsNearby() {
-    const cs = this.getState();
-    const { lat, lng } = cs.user.userGeoLoc;
+  // BUSCAR MASCOTAS CERCA DE UNA UBICACIÓN
+  async lostPetsNearby(lat, lng) {
+    // const cs = this.getState();
+    // const { lat, lng } = cs.user.userGeoLoc;
 
     const resUserPets = await fetch(
-      API_BASE_URL + `/lostPetNear?lat=${lat}&lng=${lng}`
+      API_BASE_URL + `/lostPetNear?lat=${lat}&lng=${lng}`,
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
+      }
     );
-
     return await resUserPets.json();
   },
   setState(newState) {

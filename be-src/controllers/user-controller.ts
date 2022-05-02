@@ -1,13 +1,8 @@
 import { Auth, User } from "../models";
-
 import { getSHA256ofString } from "../middleware/middleware";
 
-// Función para crear el usuario
-export async function createUser(userData: {
-  fullname: string;
-  email: string;
-  password: string;
-}) {
+// CREAR USUARIO
+export async function createUser(userData: { fullname: string; email: string; password: string }) {
   if (!userData.fullname || !userData.email || !userData.password) {
     return { error: "Faltan datos del usuario." };
   }
@@ -15,6 +10,7 @@ export async function createUser(userData: {
   const { fullname, email, password } = userData;
   const passwordString = password.toString();
 
+  // TABLA DE USER
   const [user, created] = await User.findOrCreate({
     // Busca en la tabla users el campo email con el valor req.body.email
     where: { email },
@@ -25,11 +21,10 @@ export async function createUser(userData: {
     },
   });
 
+  //TABLA DE AUTH
   const [auth, authCreated] = await Auth.findOrCreate({
-    // Busca en la tabla auth cualquiera que tenga user_id = a user.get("id")
-    // es el campo que nunca puede cambiar, en cambio email si puede cambiar
+    // Busca en la tabla auth q tenga user_id = user.get("id"), es el campo que nunca puede cambiar, en cambio email si puede cambiar
     where: { userId: user["id"] },
-    // si no lo encuentra le ponemos los datos básicos del auth.
     defaults: {
       email,
       password: getSHA256ofString(passwordString),
@@ -45,17 +40,16 @@ export async function createUser(userData: {
   };
 }
 
-// Buscamos el usuario por el id
+// BUSCAMOS EL USUARIO POR SU ID
 export async function findUser(userId: number) {
   if (!userId) {
     return { error: "El id es necesario" };
   }
   const user = await User.findByPk(userId);
-
   return user;
 }
 
-// Buscamos el user por su email, si existe devuelve true, sino false
+// BUSCAMOS EL USER POR SU EMAIL, SI EXISTE DEVUELVE TRUE SINO FALSE
 export async function checkEmailUser(userData: { email: string }) {
   const { email } = userData;
 
@@ -63,9 +57,7 @@ export async function checkEmailUser(userData: { email: string }) {
     return { error: "El email es necesario" };
   }
 
-  const userExist = await User.findOne({
-    where: { email },
-  });
+  const userExist = await User.findOne({ where: { email } });
 
   if (userExist) {
     return true;
@@ -74,16 +66,14 @@ export async function checkEmailUser(userData: { email: string }) {
   }
 }
 
-// Función para encontrar y modificar un usuario
-export async function modifiedUser(
-  userData: { fullname: string; password: string },
-  id: number
-) {
+// F PARA MODIFICAR UN USUARIO
+export async function modifiedUser( userData: { fullname: string; password: string }, id: number) {
   const { fullname, password } = userData;
 
   if (!fullname || !password) {
     return { error: "Faltan datos del usuario" };
   }
+
   // Se modifica el nombre en la tabla de usuarios
   await User.update({ fullname }, { where: { id } });
   // Se modifica la contrasena en la tabla auth

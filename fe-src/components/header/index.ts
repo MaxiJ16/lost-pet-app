@@ -40,6 +40,7 @@ export class Header extends HTMLElement {
 
     sessionEl.addEventListener("click", () => {
       const textSession = sessionEl.textContent;
+      windowEl.style.display = "";
       if (textSession == "Iniciar Sesión") {
         Router.go("/auth");
       } else if (textSession == "Cerrar Sesión") {
@@ -51,8 +52,8 @@ export class Header extends HTMLElement {
     // listener my-data
 
     const myDataEl = document.querySelector(".my-data") as any;
-
     myDataEl.addEventListener("click", () => {
+      windowEl.style.display = "";
       if (emailExist == "" || false) {
         state.setPageBefore("/my-data");
         Router.go("/auth");
@@ -64,8 +65,8 @@ export class Header extends HTMLElement {
     // listener mis mascotas reportadas
 
     const mypetsReportsEl = document.querySelector(".my-pets") as any;
-
     mypetsReportsEl.addEventListener("click", () => {
+      windowEl.style.display = "";
       if (emailExist == "" || false) {
         state.setPageBefore("/my-pets");
         Router.go("/auth");
@@ -79,6 +80,7 @@ export class Header extends HTMLElement {
     const reportPetsEl = document.querySelector(".report-pets") as any;
 
     reportPetsEl.addEventListener("click", () => {
+      windowEl.style.display = "";
       if (emailExist == "" || false) {
         state.setPageBefore("/report-pet");
         Router.go("/auth");
@@ -98,19 +100,19 @@ export class Header extends HTMLElement {
           <img src="${menuX}" alt="x" class="menu-window__close-window">
         </div>
         <div class="menu-window__contents">
-          <a href="" class="menu-window__contents-title my-data"><h2>Mis datos</h2></a>
-          <a href="" class="menu-window__contents-title my-pets"><h2>Mis mascotas reportadas</h2></a>
-          <a href="" class="menu-window__contents-title report-pets"><h2>Reportar mascota</h2></a>
+          <a href="" class="menu-window__contents-title my-data"><my-text tag="h2">Mis datos</my-text></a>
+          <a href="" class="menu-window__contents-title my-pets"><my-text tag="h2">Mis mascotas reportadas</my-text></a>
+          <a href="" class="menu-window__contents-title report-pets"><my-text tag="h2">Reportar mascota</my-text></a>
           
           <div class="session-data">
             <my-text tag="h3" class="data-email">${
               this.email && this.token !== "" ? this.email : "Invitado/a"
             }</my-text>
-            <a href="" class="menu-window__contents-title session">${
+            <my-text tag="h3" class="menu-window__contents-title session">${
               this.email && this.token !== ""
                 ? "Cerrar Sesión"
                 : "Iniciar Sesión"
-            }</a>
+            }</my-text>
           </div>
 
         </div>
