@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "sync": "ts-node ./be-src/db/sync.ts",
-    "dev:be": "nodemon --watch ./be-src/index.ts --exec ts-node ./be-src/index.ts",
+    "dev:be": "nodemon --watch ./be-src/index.ts --exec ts-node ./be-src/dev.ts",
     "build:be": "tsc",
     "dev:fe": "parcel serve ./fe-src/index.html --dist-dir ./fe-dist",
     "build:fe": "parcel build ./fe-src/index.html --dist-dir ./fe-dist",
