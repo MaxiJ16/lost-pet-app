@@ -1,6 +1,6 @@
 const sgMail = require("@sendgrid/mail");
 
-sgMail.setApiKey(process.env.SENDGRID_API);
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 // F PARA ENVIAR POR MAIL EL REPORTE DE LA MASCOTA
 export async function sendEmailReport(reportData) {
