@@ -10,7 +10,7 @@ import { createReport } from "./controllers/report-controller";
 
 // IMPORT MIDDLEWARES
 import { authMiddleware, bodyMiddleware } from "./middleware/middleware";
-
+import { connectionTest } from "./db/connection";
 // ROUTES
 const ruta = path.resolve(__dirname, "../fe-dist/index.html");
 
@@ -22,6 +22,22 @@ app.use(express.json({ limit: "50mb" }));
 app.use(cors());
 
 // ENDPOINTS
+
+//
+// TESTS
+// TESTEA LA CONEXION A SEQUELIZE EN DEV Y PRODUCTION
+app.get("/test", async (req, res) => {
+  const prueba = await connectionTest();
+
+  console.log(prueba);
+
+  res.status(200).json({
+    message: "todo ok",
+    test: prueba,
+    base_url: process.env.API_BASE_URL,
+    secret: process.env.API_SECRET,
+  });
+});
 
 app.get("/env", (req, res) => {
   res.json({
