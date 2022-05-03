@@ -37,7 +37,7 @@ class MyData extends HTMLElement {
       const fullname = target.fullname.value;
       const password = target.password.value;
       const repeatPassword = target["repeat-password"].value;
-
+      
       // obtenemos el email del state
       const { email, emailExist } = cs.user;
 
@@ -55,11 +55,19 @@ class MyData extends HTMLElement {
         msgEl.textContent = "Las contraseñas ingresadas no coinciden";
       }
 
-      // Si las contraseñas coinciden
-      if (password == repeatPassword) {
+      // si no ingresó contraseña
+      if(password == undefined){
+        preloaderEl.style.display = "none";
+        msgEl.className = "message-error";
+        msgEl.textContent = "No ingresaste una contraseña nueva";
+      }
+
+      // Si las contraseñas coinciden y no es igual a undefined
+      if (password == repeatPassword && password !== undefined) {
         // Si el usuario existe y quiere modificar los datos
         if (emailExist == true) {
           const userModifiedData = { fullname, password };
+          
           const updateUserData = await state.modifiedUser(userModifiedData);
           setFullnameAndPassword();
 

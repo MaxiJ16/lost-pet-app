@@ -11,10 +11,8 @@ class ReportPets extends HTMLElement {
   connectedCallback() {
     this.render();
   }
-
   addListeners() {
     const cs = state.getState();
-    const { lat, lng } = cs.user._geoloc;
 
     // CONFIGURAMOS DROPZONE
     const buttonDropzoneEl = document.querySelector(".dropzone-button") as any;
@@ -32,7 +30,8 @@ class ReportPets extends HTMLElement {
     myDropzone.on("thumbnail", function (file) {
       imageUrl = file.dataURL;
     });
-    
+
+    // Cancelar
     const cancelButton = document.querySelector(".button-cancel") as any;
     cancelButton.addEventListener("click", () => {
       Router.go("/");
@@ -40,44 +39,48 @@ class ReportPets extends HTMLElement {
 
     // Buscamos el div para pegar nuestros mensajes de éxito o error
     const msgEl = document.querySelector("msg-comp") as any;
-    const preloaderEl = document.querySelector("pre-loader") as any;
 
     //form
     const formEl = document.querySelector(".report-form") as any;
     formEl.addEventListener("submit", async (e: any) => {
       e.preventDefault();
+      const { lat, lng } = cs.user._geoloc;
 
-      preloaderEl.style.display = "initial";
+      msgEl.className = "message-error";
+      msgEl.textContent = "Aguarda un momento...";
 
-      // Tomamos los datos de la mascota y los ponemos en el objeto petData
-      const petData = {
-        name: e.target.name.value,
-        pictureURL: imageUrl,
-        state: "PERDIDO",
-        last_location_lat: lat,
-        last_location_lng: lng,
-        location: e.target.location.value,
-      };
+      if (lat && lng) {
+        // Tomamos los datos de la mascota y los ponemos en el objeto petData
+        const petData = {
+          name: e.target.name.value,
+          pictureURL: imageUrl,
+          state: "PERDIDO",
+          last_location_lat: lat,
+          last_location_lng: lng,
+          location: e.target.location.value,
+        };
 
-      // Esperamos la respuesta
-      const resNewPet = await state.newPet(petData);
+        // Esperamos la respuesta
+        const resNewPet = await state.newPet(petData);
 
-      // Si se cumple la respuesta
-      if (resNewPet.message) {
-        preloaderEl.style.display = "none";
-        msgEl.className = "message-exito"
-        msgEl.textContent = resNewPet.message;
-        // Una vez creada la mascota lo redirige a sus mascotas reportadas
-        setTimeout(() => {
-          Router.go("/my-pets");
-        }, 2000);
-      }
+        // Si se cumple la respuesta
+        if (resNewPet.message) {
+          msgEl.className = "message-exito";
+          msgEl.textContent = resNewPet.message;
+          // Una vez creada la mascota lo redirige a sus mascotas reportadas
+          setTimeout(() => {
+            Router.go("/my-pets");
+          }, 2000);
+        }
 
-      // Si la respuesta devuelve un error
-      if (resNewPet.error) {
-        preloaderEl.style.display = "none";
+        // Si la respuesta devuelve un error
+        if (resNewPet.error) {
+          msgEl.className = "message-error";
+          msgEl.textContent = resNewPet.error;
+        }
+      } else {
         msgEl.className = "message-error";
-        msgEl.textContent = resNewPet.error;
+        msgEl.textContent = "Tenemos problemas con las coordenadas vuelve a intentarlo";
       }
     });
   }
@@ -115,7 +118,6 @@ class ReportPets extends HTMLElement {
             </form>
             
             <button class="button button-cancel">Cancelar</button>
-            <pre-loader></pre-loader>
             <msg-comp></msg-comp>
         </div>
       </section>

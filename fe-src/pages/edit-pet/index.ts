@@ -132,13 +132,11 @@ class EditPet extends HTMLElement {
 
     // Buscamos el div para pegar nuestros mensajes de éxito o error
     const msgCom = document.querySelector("msg-comp");
-    const preloaderEl = document.querySelector("pre-loader") as any;
 
     // si el objeto petData no tiene propiedades es porque no se realizaron cambios
     const objectKeys = Object.keys(petData).length == 0;
 
     if (objectKeys !== false) {
-      preloaderEl.style.display = "none";
       msgCom.className = "message-error";
       msgCom.textContent = "No realizaste ningún cambio";
     }
@@ -149,14 +147,12 @@ class EditPet extends HTMLElement {
 
       // Si se cumple la respuesta
       if (resEditPet.message) {
-        preloaderEl.style.display = "none";
         msgCom.className = "message-exito";
         msgCom.textContent = resEditPet.message;
       }
 
       // Si la respuesta devuelve un error
       if (resEditPet.error) {
-        preloaderEl.style.display = "none";
         msgCom.className = "message-error";
         msgCom.textContent = resEditPet.error;
       }
@@ -166,9 +162,6 @@ class EditPet extends HTMLElement {
     const cs = state.getState();
     // MAPBOX CONFIG
     const locationValue = document.querySelector(".location-input") as HTMLInputElement;
-
-    // LOADER
-    const preloaderEl = document.querySelector("pre-loader") as any;
     
     // Botón para la búsqueda de la ubicación
     const buttonSearch = document.querySelector(".button-search") as any;
@@ -213,7 +206,9 @@ class EditPet extends HTMLElement {
     const formEl = document.querySelector(".edit-form") as any;
     formEl.addEventListener("submit", async (e: any) => {
       e.preventDefault();
-      preloaderEl.style.display = "initial";
+
+      msgCom.textContent = "Aguarda un momento..."
+      msgCom.className = "message-error"
 
       // Si el nombre y la locación en el state es distinto al que enviamos por el form,
       // cambiamos el valor para modificar la mascota, si es igual no lo modifica
@@ -238,7 +233,6 @@ class EditPet extends HTMLElement {
 
     deleteLink.addEventListener("click", async (e) => {
       e.preventDefault();
-      preloaderEl.style.display = "initial";
       const resDeletePet = await state.eliminatePet(petId);
       // Si se eliminó correctamente
       if (resDeletePet.message) {
@@ -292,7 +286,6 @@ class EditPet extends HTMLElement {
           </form>
 
           <my-text tag="h4" class="unpublish-link">Despublicar</my-text>
-          <pre-loader></pre-loader>
           <msg-comp></msg-comp>
         </div>
       </section>

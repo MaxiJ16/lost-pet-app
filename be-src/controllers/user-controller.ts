@@ -74,10 +74,12 @@ export async function modifiedUser( userData: { fullname: string; password: stri
     return { error: "Faltan datos del usuario" };
   }
 
+  const passwordHash = getSHA256ofString(password.toString());
+
   // Se modifica el nombre en la tabla de usuarios
   await User.update({ fullname }, { where: { id } });
   // Se modifica la contrasena en la tabla auth
-  await Auth.update({ password }, { where: { id } });
+  await Auth.update({ password: passwordHash }, { where: { id } });
 
   return { exito: `Usuario modificado con éxito` };
 }

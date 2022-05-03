@@ -28,7 +28,7 @@ export async function temporaryPassword(authData: { email; newPassword }) {
     from: "maxijofre.c@gmail.com",
     subject: "Recuperar contraseña de App Mascotas Perdidas",
     text: "Nueva información sobre tu mascota",
-    html: `<h1>APP ANIMALES PERDIDOS</h1><p>Tu <strong>contraseña provisoria es: ${newPassword}. </strong><p>Recuerda que puedes cambiarla en la sección "Mis Datos"</p><p>Saludos!</p>`,
+    html: `<h1>APP ANIMALES PERDIDOS</h1><p>Tu <strong>contraseña provisoria es: ${newPassword} </strong><p>Recuerda que puedes cambiarla en la sección "Mis Datos"</p><p>Saludos!</p>`,
   };
 
   const sentEmail = await sgMail.send(msg);

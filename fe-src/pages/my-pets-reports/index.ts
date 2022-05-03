@@ -57,7 +57,6 @@ class MyPets extends HTMLElement {
           <h2 class="no-reports"></h2>
         </div>
         <div class="cards-container"></div>
-        <pre-loader></pre-loader>
       </section>
     `;
     this.listeners();

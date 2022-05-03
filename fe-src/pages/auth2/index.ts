@@ -23,7 +23,7 @@ class Auth extends HTMLElement {
       // SETEAMOS LA DATA CON EL EMAIL DEL STATE Y LA CONTRASEÑA INGRESADA EN EL INPUT
       const authData = { email, password: e.target.password.value };
       const authRes = await state.signIn(authData);
-
+      
       // SI LA PROMESA DEL SIGIN NO SE RESUELVE
       if (authRes.error) {
         preloaderEl.style.display = "none";
