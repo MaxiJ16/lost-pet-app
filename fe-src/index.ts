@@ -6,7 +6,7 @@ import "./router";
 import "./components/header";
 import "./components/paw-pet";
 import "./components/text";
-import "./components/msg-comp";
+import "./components/msg-comp"
 import "./components/pet-card";
 import "./components/pre-loader";
 
