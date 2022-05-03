@@ -11,6 +11,9 @@ import { createReport } from "./controllers/report-controller";
 // IMPORT MIDDLEWARES
 import { authMiddleware, bodyMiddleware } from "./middleware/middleware";
 
+// ROUTES
+const ruta = path.resolve(__dirname, "../fe-dist/index.html");
+
 // CONFIG APP
 const app = express();
 const port = process.env.PORT || 3000;
@@ -19,6 +22,12 @@ app.use(express.json({ limit: "50mb" }));
 app.use(cors());
 
 // ENDPOINTS
+
+app.get("/env", (req, res) => {
+  res.json({
+    environment: process.env.NODE_ENV,
+  });
+});
 
 ///// USER /////
 
@@ -117,13 +126,11 @@ app.delete("/pet/:petId", authMiddleware, async (req, res) => {
   res.json(deletedPet);
 });
 
+app.use(express.static("fe-dist"));
 
-// ROUTES
-const ruta = path.resolve(__dirname, "../fe-dist");
-app.use(express.static(ruta));
 // POR DEFECTO NOS LLEVA A LA PÁG PRINCIPAL
 app.get("*", (req, res) => {
-  res.sendFile(ruta + "/index.html");
+  res.sendFile(ruta);
 });
 
 // LISTEN SERVER

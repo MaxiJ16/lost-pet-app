@@ -1,10 +1,12 @@
 {
   "name": "desafio-final-mod-7",
   "version": "1.0.0",
+  "repository": "https://github.com/MaxiJ16/lost-pet-app.git",
+  "author": "Maxi Jofré <maxijofre.c@gmail.com>",
   "license": "MIT",
   "scripts": {
     "sync": "ts-node ./be-src/db/sync.ts",
-    "dev:be": "nodemon --watch ./be-src/index.ts --exec ts-node ./be-src/dev.ts",
+    "dev:be": "nodemon --watch ./be-src/index.ts --exec ts-node ./be-src/index.ts",
     "build:be": "tsc",
     "dev:fe": "parcel serve ./fe-src/index.html --dist-dir ./fe-dist",
     "build:fe": "parcel build ./fe-src/index.html --dist-dir ./fe-dist",
@@ -13,6 +15,7 @@
   },
   "dependencies": {
     "@sendgrid/mail": "^7.6.2",
+    "@types/node": "^17.0.31",
     "@vaadin/router": "^1.7.4",
     "algoliasearch": "^4.13.0",
     "cloudinary": "^1.28.1",
