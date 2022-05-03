@@ -19,6 +19,16 @@ const sequelize = new Sequelize({
   },
 });
 
+console.log(process.env.SENDGRID_API);
+console.log(process.env.DATABASE_USERNAME);
+console.log(process.env.DATABASE_PASSWORD);
+console.log(process.env.DATABASE_PORT);
+console.log(process.env.DATABASE_HOST);
+console.log(process.env.DATABASE_DATABASE);
+console.log(process.env.CLOUDINARY_API_KEY);
+console.log(process.env.ALGOLIA_API_KEY);
+
+
 sequelize.authenticate();
 
 export { sequelize  };
