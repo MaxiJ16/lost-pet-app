@@ -1,13 +1,14 @@
 import "dotenv/config";
+
 import { Sequelize } from "sequelize";
 
 const sequelize = new Sequelize({
   dialect: "postgres",
-  username: process.env.DATABASE_USERNAME,
+  username: "quhxzpkvpnqdrn",
   password: process.env.DATABASE_PASSWORD,
-  database: process.env.DATABASE_DATABASE,
+  database: "dd4f7ka0p0t8i6",
   port: 5432,
-  host: process.env.DATABASE_HOST,
+  host: "ec2-54-160-109-68.compute-1.amazonaws.com",
   ssl: true,
   // esto es necesario para que corra correctamente
   dialectOptions: {
@@ -20,4 +21,4 @@ const sequelize = new Sequelize({
 
 sequelize.authenticate();
 
-export { sequelize,  };
+export { sequelize };
