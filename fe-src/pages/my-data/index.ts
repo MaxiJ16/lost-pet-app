@@ -42,9 +42,9 @@ class MyData extends HTMLElement {
       const { email, emailExist } = cs.user;
 
       // Función para setear fullname/ password
-      function setFullnameAndPassword() {
-        state.setUserFullname(fullname);
-        const passId = nanoid(password.length);
+      function setFullnameAndPassword(name, passw) {
+        state.setUserFullname(name);
+        const passId = nanoid(passw.length);
         state.setPasswordId(passId);
       }
 
@@ -68,8 +68,8 @@ class MyData extends HTMLElement {
         if (emailExist == true) {
           const userModifiedData = { fullname, password };
           
+          setFullnameAndPassword(fullname, password);
           const updateUserData = await state.modifiedUser(userModifiedData);
-          setFullnameAndPassword();
 
           preloaderEl.style.display = "none";
           msgEl.className = "message-exito"
@@ -79,6 +79,7 @@ class MyData extends HTMLElement {
         // Si el usuario no existe lo crea
         if (emailExist == false) {
           const objectSignUp = { fullname, email, password };
+          setFullnameAndPassword(fullname, password);
           // creamos el usuario
           const resSignUp = await state.signUp(objectSignUp);
           // Si se creo
@@ -98,7 +99,6 @@ class MyData extends HTMLElement {
             msgEl.className = "message-error"
           }
 
-          setFullnameAndPassword();
         }
       }
     });

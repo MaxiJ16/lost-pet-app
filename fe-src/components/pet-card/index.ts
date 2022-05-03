@@ -240,15 +240,11 @@ export class Card extends HTMLElement {
 
       @media(min-width: 769px){
         .reportInfo-form {
-          max-width: 700px;
+          max-width: 620px;
           margin: 0 auto;
           margin-top: 100px;
-          height: 70vh;
+          height: 80vh;
         }
-      }
-
-      .label {
-        margin-bottom: 18px;
       }
 
       .container-x {
