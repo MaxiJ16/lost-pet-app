@@ -3,9 +3,21 @@ import * as path from "path";
 import * as cors from "cors";
 
 // IMPORT CONTROLLERS
-import { checkEmailUser, createUser, findUser, modifiedUser } from "./controllers/user-controller";
+import {
+  checkEmailUser,
+  createUser,
+  findUser,
+  modifiedUser,
+} from "./controllers/user-controller";
 import { newPassword, signInUser } from "./controllers/auth-controller";
-import { createPet, deletePet, findAllPets, findLostPetNear, findUserPets, modifiedPet } from "./controllers/pet-controller";
+import {
+  createPet,
+  deletePet,
+  findAllPets,
+  findLostPetNear,
+  findUserPets,
+  modifiedPet,
+} from "./controllers/pet-controller";
 import { createReport } from "./controllers/report-controller";
 
 // IMPORT MIDDLEWARES
@@ -19,12 +31,18 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ extended: false }));
 
-const allowedHost = ["https://lost-pet-app-2b162.web.app", "http://127.0.0.1:8080"]
+const allowedHost = [
+  "https://lost-pet-app-2b162.web.app",
+  "http://127.0.0.1:8080",
+];
 
-app.use(cors({
-  origin: allowedHost
-}));
+app.use(
+  cors({
+    origin: allowedHost,
+  })
+);
 
 // ENDPOINTS
 
@@ -72,7 +90,6 @@ app.get("/me", authMiddleware, async (req, res) => {
   res.json(userData);
 });
 
-
 ///// REPORT /////
 
 // CREATE REPORT
@@ -84,7 +101,6 @@ app.post("/report", bodyMiddleware, async (req, res) => {
     console.log(error);
   }
 });
-
 
 ///// PET /////
 
