@@ -1,4 +1,4 @@
-const API_BASE_URL =  process.env.API_BASE_URL;
+const API_BASE_URL = "https://lost-pet-v1.onrender.com";
 
 const state = {
   data: {
@@ -24,7 +24,7 @@ const state = {
   listeners: [],
   // INICIALIZAMOS EL STATE
   init() {
-    const lastStorage = JSON.parse(localStorage.getItem("userData"));
+    const lastStorage = JSON.parse(localStorage.getItem("userData") as any);
 
     if (lastStorage) {
       this.setState(lastStorage);
@@ -152,6 +152,7 @@ const state = {
       },
       body: JSON.stringify(emailData),
     });
+
     const data = await resEmail.json();
     cs.user.emailExist = data;
     return data;

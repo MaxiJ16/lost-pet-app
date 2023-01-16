@@ -120,7 +120,7 @@ export class Card extends HTMLElement {
     divEl.className = "container-petCard";
     divEl.innerHTML = `
       <div class="petCard-container-img">
-        <img class="img" src="${imagePet}" alt="pet" >
+        <img class="img" src="${imagePet}" alt="pet" crossorigin="anonymous">
       </div>
 
       <div class="petCard-container-content">
